@@ -2,16 +2,18 @@ package data_access;
 
 import entity.User;
 import entity.UserFactory;
+import use_case.clear_users.ClearUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 import java.io.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class FileUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface {
+public class FileUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface, ClearUserDataAccessInterface {
 
     private final File csvFile;
 
@@ -51,6 +53,20 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface, 
                 }
             }
         }
+    }
+
+    public ArrayList<String> getAll(){ // make an array list of all the users
+        ArrayList<String> allUsers = new ArrayList<>();
+        for (Map.Entry<String, User> entry : accounts.entrySet()) {
+            String user = entry.getKey();
+            allUsers.add(user);
+        }
+        return allUsers;
+    }
+
+    public void clear() { // delete all the users, main purpose of clear
+        accounts.clear();
+        save();
     }
 
     @Override
